@@ -31,9 +31,9 @@ enum SeedData {
     /// Fixed portfolio positions. P&L is computed live against market prices.
     static let holdings: [Holding] = [
         Holding(symbol: "TMPV",     name: "Tata Motors Pass. Veh.", exchange: "NSE", quantity: 5000, averagePrice: 210.00),
-        Holding(symbol: "TMCV",     name: "Tata Motors Comm. Veh.", exchange: "NSE", quantity: 5000, averagePrice: 120.00),
-        Holding(symbol: "RELIANCE", name: "Reliance Industries",    exchange: "NSE", quantity: 400,  averagePrice: 840.00),
-        Holding(symbol: "JIOFIN",   name: "Jio Financial Services", exchange: "NSE", quantity: 200,  averagePrice: 230.00),
+        Holding(symbol: "TMCV",     name: "Tata Motors Comm. Veh.", exchange: "NSE", quantity: 5000, averagePrice: 205.00),
+        Holding(symbol: "RELIANCE", name: "Reliance Industries",    exchange: "NSE", quantity: 200,  averagePrice: 840.00),
+        Holding(symbol: "JIOFIN",   name: "Jio Financial Services", exchange: "NSE", quantity: 200,  averagePrice: 198.00),
     ]
 
     /// Lookup helper.
