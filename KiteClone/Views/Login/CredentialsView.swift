@@ -13,6 +13,7 @@ struct CredentialsView: View {
     private enum Field: Hashable { case userID, password }
 
     var onContinue: () -> Void
+    var onUseBiometrics: () -> Void = {}
 
     var body: some View {
         ScrollView {
@@ -77,6 +78,16 @@ struct CredentialsView: View {
                 Button("Forgot user ID or password?") { }
                     .font(.system(size: 14))
                     .foregroundStyle(KiteTheme.buyBlue)
+
+                if BiometricService.isAvailable {
+                    Button(action: onUseBiometrics) {
+                        Label("Login with \(BiometricService.displayName)",
+                              systemImage: BiometricService.iconName)
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(KiteTheme.textPrimary)
+                    }
+                    .padding(.top, 4)
+                }
 
                 Spacer(minLength: 60)
 

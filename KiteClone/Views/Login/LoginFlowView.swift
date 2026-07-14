@@ -1,18 +1,25 @@
 import SwiftUI
 
-/// Coordinates the two-step Kite login: credentials, then a 6-digit PIN.
+/// Coordinates the Kite login: Face ID auto-login, then a User ID / password
+/// fallback, then a 6-digit PIN.
 struct LoginFlowView: View {
-    enum Step { case credentials, pin }
+    enum Step { case biometric, credentials, pin }
 
-    @State private var step: Step = .credentials
+    @State private var step: Step = .biometric
 
     var body: some View {
         ZStack {
             Color.white.ignoresSafeArea()
             switch step {
+            case .biometric:
+                BiometricLoginView(onUseCredentials: { withAnimation { step = .credentials } })
+                    .transition(.opacity)
             case .credentials:
-                CredentialsView { withAnimation { step = .pin } }
-                    .transition(.move(edge: .leading).combined(with: .opacity))
+                CredentialsView(
+                    onContinue: { withAnimation { step = .pin } },
+                    onUseBiometrics: { withAnimation { step = .biometric } }
+                )
+                .transition(.move(edge: .trailing).combined(with: .opacity))
             case .pin:
                 PinView(onBack: { withAnimation { step = .credentials } })
                     .transition(.move(edge: .trailing).combined(with: .opacity))

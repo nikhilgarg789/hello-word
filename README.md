@@ -22,6 +22,21 @@ A demo iOS app that mimics the look and feel of **Kite by Zerodha**:
 
 At the login screen, type any User ID and password, tap **Login**, enter any 6 digits, and you're in.
 
+### Face ID auto-login
+
+The app opens on a **Face ID / Touch ID** screen and prompts automatically
+(like Kite). On a successful match it logs you straight in; otherwise use
+**"Login with User ID instead."** It uses Apple's `LocalAuthentication`, so it's
+real biometric auth.
+
+**To test Face ID in the Simulator:**
+1. Simulator menu: **Features → Face ID → Enrolled** (tick it).
+2. Run the app. When the Face ID sheet appears, choose
+   **Features → Face ID → Matching Face** to approve (or **Non-matching Face**
+   to see it fail).
+
+On a physical iPhone it uses the device's real Face ID / Touch ID.
+
 ## How the "live" prices work
 
 Prices come from **Yahoo Finance's free, keyless quote endpoint** — no API key
