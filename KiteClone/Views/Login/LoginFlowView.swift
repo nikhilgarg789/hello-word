@@ -1,9 +1,9 @@
 import SwiftUI
 
-/// Coordinates the Kite login: Face ID auto-login, then a User ID / password
-/// fallback, then a 6-digit PIN.
+/// Coordinates the Kite login: Face ID auto-login by default, with a User ID /
+/// password fallback. No PIN / MFA step.
 struct LoginFlowView: View {
-    enum Step { case biometric, credentials, pin }
+    enum Step { case biometric, credentials }
 
     @State private var step: Step = .biometric
 
@@ -15,13 +15,7 @@ struct LoginFlowView: View {
                 BiometricLoginView(onUseCredentials: { withAnimation { step = .credentials } })
                     .transition(.opacity)
             case .credentials:
-                CredentialsView(
-                    onContinue: { withAnimation { step = .pin } },
-                    onUseBiometrics: { withAnimation { step = .biometric } }
-                )
-                .transition(.move(edge: .trailing).combined(with: .opacity))
-            case .pin:
-                PinView(onBack: { withAnimation { step = .credentials } })
+                CredentialsView(onUseBiometrics: { withAnimation { step = .biometric } })
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }

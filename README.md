@@ -2,7 +2,7 @@
 
 A demo iOS app that mimics the look and feel of **Kite by Zerodha**:
 
-- **Dummy login experience** — Kite's two-step flow (User ID + password → 6-digit PIN). Any values are accepted; nothing leaves the device.
+- **Face ID login** — the app opens on a Face ID / Touch ID screen and logs you in on a match, with a User ID + password fallback. Any credentials are accepted; nothing leaves the device.
 - **Watchlist** — a list of Indian equities (RELIANCE, TCS, INFY, HDFCBANK, …) with **live-updating** last-traded prices, day change and % change, colored green/red.
 - **Portfolio** — a **fixed set of holdings** (quantity + average buy price). Invested value, current value, day's P&L and total P&L are all **computed live from the current prices**, so profit/loss changes in real time.
 - **Account** — profile summary and logout.
@@ -20,7 +20,7 @@ A demo iOS app that mimics the look and feel of **Kite by Zerodha**:
 2. Select the **KiteClone** scheme and an iPhone simulator (e.g. iPhone 15).
 3. Press **⌘R**.
 
-At the login screen, type any User ID and password, tap **Login**, enter any 6 digits, and you're in.
+Face ID prompts automatically. If you skip it, type any User ID and password and tap **Login** — you're straight in (no PIN step).
 
 ### Face ID auto-login
 
@@ -77,7 +77,7 @@ KiteClone/
     MarketDataService.swift Live (simulated) price ticker
     SessionStore.swift      Dummy auth state
   Views/
-    Login/                  CredentialsView, PinView
+    Login/                  BiometricLoginView, CredentialsView
     Main/MainTabView.swift  Bottom tab bar (Watchlist/Orders/Portfolio/Bids/Account)
     Watchlist/              Watchlist + instrument detail
     Portfolio/              Portfolio summary + holding rows (live P&L)

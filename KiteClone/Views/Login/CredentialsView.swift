@@ -12,7 +12,6 @@ struct CredentialsView: View {
 
     private enum Field: Hashable { case userID, password }
 
-    var onContinue: () -> Void
     var onUseBiometrics: () -> Void = {}
 
     var body: some View {
@@ -112,11 +111,10 @@ struct CredentialsView: View {
     }
 
     private func attemptLogin() {
-        if let message = session.validateCredentials(userID: userID, password: password) {
+        if let message = session.loginWithCredentials(userID: userID, password: password) {
             error = message
         } else {
             error = nil
-            onContinue()
         }
     }
 }
