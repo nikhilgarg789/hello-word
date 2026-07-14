@@ -5,8 +5,8 @@ import UIKit
 struct CredentialsView: View {
     @EnvironmentObject private var session: SessionStore
 
-    @State private var userID = ""
-    @State private var password = ""
+    @State private var userID = "ZW1607"
+    @State private var password = "739104"
     @State private var error: String?
     @FocusState private var focused: Field?
 

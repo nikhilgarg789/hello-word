@@ -44,7 +44,7 @@ struct BiometricLoginView: View {
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(KiteTheme.textPrimary)
 
-                Text("Signed in as \(session.displayName == "Trader" ? "ZU1234" : session.displayName)")
+                Text("Signed in as \(session.displayName == "Trader" ? "ZW1607" : session.displayName)")
                     .font(.system(size: 14))
                     .foregroundStyle(KiteTheme.textSecondary)
 

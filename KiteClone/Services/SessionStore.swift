@@ -26,7 +26,7 @@ final class SessionStore: ObservableObject {
     /// Complete login via a successful Face ID / Touch ID check. Uses a
     /// "remembered" user ID, mirroring Kite's biometric auto-login.
     func authenticateWithBiometrics() {
-        if userID.isEmpty { userID = "ZU1234" }
+        if userID.isEmpty { userID = "ZW1607" }
         isAuthenticated = true
         MarketDataService.shared.start()
     }
