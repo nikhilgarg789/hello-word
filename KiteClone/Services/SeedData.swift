@@ -20,6 +20,7 @@ enum SeedData {
         Instrument(symbol: "TMPV",       name: "Tata Motors Pass. Veh.", exchange: "NSE", previousClose: 245.00),
         Instrument(symbol: "TMCV",       name: "Tata Motors Comm. Veh.", exchange: "NSE", previousClose: 130.00),
         Instrument(symbol: "JIOFIN",     name: "Jio Financial Services", exchange: "NSE", previousClose: 320.00),
+        Instrument(symbol: "BANKBARODA", name: "Bank of Baroda",         exchange: "NSE", previousClose: 245.00),
     ]
 
     /// The default watchlist (symbols shown on the first tab).
@@ -34,6 +35,7 @@ enum SeedData {
         Holding(symbol: "TMCV",     name: "Tata Motors Comm. Veh.", exchange: "NSE", quantity: 5000, averagePrice: 205.00),
         Holding(symbol: "RELIANCE", name: "Reliance Industries",    exchange: "NSE", quantity: 200,  averagePrice: 840.00),
         Holding(symbol: "JIOFIN",   name: "Jio Financial Services", exchange: "NSE", quantity: 200,  averagePrice: 198.00),
+        Holding(symbol: "BANKBARODA", name: "Bank of Baroda",       exchange: "NSE", quantity: 5168, averagePrice: 289.81),
     ]
 
     /// Lookup helper.
