@@ -16,6 +16,10 @@ enum SeedData {
         Instrument(symbol: "BHARTIARTL", name: "Bharti Airtel",         exchange: "NSE", previousClose: 1402.90),
         Instrument(symbol: "ITC",        name: "ITC",                   exchange: "NSE", previousClose: 434.55),
         Instrument(symbol: "WIPRO",      name: "Wipro",                 exchange: "NSE", previousClose: 462.10),
+        // Portfolio holdings (fetched for live prices; may not all resolve on Yahoo).
+        Instrument(symbol: "TMPV",       name: "Tata Motors Pass. Veh.", exchange: "NSE", previousClose: 245.00),
+        Instrument(symbol: "TMCV",       name: "Tata Motors Comm. Veh.", exchange: "NSE", previousClose: 130.00),
+        Instrument(symbol: "JIOFIN",     name: "Jio Financial Services", exchange: "NSE", previousClose: 320.00),
     ]
 
     /// The default watchlist (symbols shown on the first tab).
@@ -26,12 +30,10 @@ enum SeedData {
 
     /// Fixed portfolio positions. P&L is computed live against market prices.
     static let holdings: [Holding] = [
-        Holding(symbol: "RELIANCE",   name: "Reliance Industries",   exchange: "NSE", quantity: 10, averagePrice: 2802.40),
-        Holding(symbol: "TCS",        name: "Tata Consultancy Serv", exchange: "NSE", quantity: 5,  averagePrice: 3610.00),
-        Holding(symbol: "INFY",       name: "Infosys",               exchange: "NSE", quantity: 20, averagePrice: 1502.15),
-        Holding(symbol: "HDFCBANK",   name: "HDFC Bank",             exchange: "NSE", quantity: 15, averagePrice: 1598.80),
-        Holding(symbol: "TATAMOTORS", name: "Tata Motors",           exchange: "NSE", quantity: 25, averagePrice: 851.30),
-        Holding(symbol: "ITC",        name: "ITC",                   exchange: "NSE", quantity: 40, averagePrice: 448.90),
+        Holding(symbol: "TMPV",     name: "Tata Motors Pass. Veh.", exchange: "NSE", quantity: 5000, averagePrice: 210.00),
+        Holding(symbol: "TMCV",     name: "Tata Motors Comm. Veh.", exchange: "NSE", quantity: 5000, averagePrice: 120.00),
+        Holding(symbol: "RELIANCE", name: "Reliance Industries",    exchange: "NSE", quantity: 400,  averagePrice: 840.00),
+        Holding(symbol: "JIOFIN",   name: "Jio Financial Services", exchange: "NSE", quantity: 200,  averagePrice: 230.00),
     ]
 
     /// Lookup helper.
