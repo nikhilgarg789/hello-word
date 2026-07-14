@@ -16,25 +16,31 @@ enum KiteTheme {
     static let sellOrange = Color(hex: 0xFF5B29)
 
     /// Gains.
-    static let gain = Color(hex: 0x2FA84F)
+    static let gain = Color(hex: 0x4CAF50)
 
     /// Losses.
-    static let loss = Color(hex: 0xE23636)
+    static let loss = Color(hex: 0xE84142)
 
     // MARK: Surfaces
 
-    static let background = Color(hex: 0xF7F7F7)
+    static let background = Color(hex: 0xF5F5F5)
     static let card = Color.white
-    static let separator = Color(hex: 0xEAEAEA)
+    static let separator = Color(hex: 0xEDEDED)
+    static let field = Color(hex: 0xF3F3F3)
 
     // MARK: Text
 
-    static let textPrimary = Color(hex: 0x1B1B1B)
-    static let textSecondary = Color(hex: 0x9B9B9B)
+    static let textPrimary = Color(hex: 0x30302F)
+    static let textSecondary = Color(hex: 0x9AA0A6)
 
     /// Returns green for non-negative values, red otherwise.
     static func pnlColor(_ value: Double) -> Color {
         value < 0 ? loss : gain
+    }
+
+    /// Momentary highlight tint used when a price ticks (Kite flashes rows).
+    static func flash(up: Bool) -> Color {
+        (up ? gain : loss).opacity(0.16)
     }
 }
 

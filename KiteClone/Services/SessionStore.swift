@@ -5,6 +5,7 @@ import Combine
 ///
 /// Any non-empty User ID + password is accepted, followed by any 6-digit PIN —
 /// this mirrors Kite's two-step login without contacting a real server.
+@MainActor
 final class SessionStore: ObservableObject {
 
     @Published private(set) var isAuthenticated = false

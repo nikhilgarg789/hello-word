@@ -1,7 +1,7 @@
 import SwiftUI
 import UIKit
 
-/// Step 1 of login: User ID + password. Any non-empty values are accepted.
+/// Step 1 of login: User ID + password, styled like Kite's login screen.
 struct CredentialsView: View {
     @EnvironmentObject private var session: SessionStore
 
@@ -10,29 +10,30 @@ struct CredentialsView: View {
     @State private var error: String?
     @FocusState private var focused: Field?
 
-    private enum Field { case userID, password }
+    private enum Field: Hashable { case userID, password }
 
-    /// Called when credentials pass validation.
     var onContinue: () -> Void
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 22) {
                 KiteLogo()
-                    .padding(.top, 40)
+                    .padding(.top, 56)
+                    .padding(.bottom, 4)
 
                 Text("Login to Kite")
-                    .font(.title3.weight(.semibold))
+                    .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(KiteTheme.textPrimary)
 
-                VStack(spacing: 16) {
+                VStack(spacing: 18) {
                     LabeledField(
-                        title: "User ID",
+                        title: "Phone or User ID",
                         text: $userID,
                         placeholder: "e.g. ZU1234",
-                        keyboard: .asciiCapable
+                        keyboard: .asciiCapable,
+                        focus: $focused,
+                        field: .userID
                     )
-                    .focused($focused, equals: .userID)
                     .textInputAutocapitalization(.characters)
                     .autocorrectionDisabled()
                     .submitLabel(.next)
@@ -41,13 +42,15 @@ struct CredentialsView: View {
                     LabeledField(
                         title: "Password",
                         text: $password,
-                        placeholder: "Password",
-                        isSecure: true
+                        placeholder: "••••••",
+                        isSecure: true,
+                        focus: $focused,
+                        field: .password
                     )
-                    .focused($focused, equals: .password)
                     .submitLabel(.go)
                     .onSubmit(attemptLogin)
                 }
+                .padding(.top, 8)
 
                 if let error {
                     Text(error)
@@ -56,30 +59,42 @@ struct CredentialsView: View {
                 }
 
                 Button(action: attemptLogin) {
-                    Text("Login")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(KiteTheme.brand, in: RoundedRectangle(cornerRadius: 6))
-                        .foregroundStyle(.white)
+                    HStack {
+                        Text("Login")
+                            .font(.system(size: 16, weight: .semibold))
+                        Spacer()
+                        Image(systemName: "arrow.right")
+                            .font(.system(size: 15, weight: .semibold))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 15)
+                    .padding(.horizontal, 18)
+                    .background(KiteTheme.brand, in: RoundedRectangle(cornerRadius: 4))
+                    .foregroundStyle(.white)
                 }
-                .padding(.top, 4)
+                .padding(.top, 8)
 
                 Button("Forgot user ID or password?") { }
-                    .font(.subheadline)
+                    .font(.system(size: 14))
                     .foregroundStyle(KiteTheme.buyBlue)
 
-                Spacer(minLength: 40)
+                Spacer(minLength: 60)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Don't have an account? Signup now!")
-                        .foregroundStyle(KiteTheme.buyBlue)
-                    Text("Demo build — enter any User ID and password to continue.")
+                VStack(alignment: .leading, spacing: 10) {
+                    Divider()
+                    HStack(spacing: 4) {
+                        Text("Don't have an account?")
+                            .foregroundStyle(KiteTheme.textSecondary)
+                        Text("Signup now!")
+                            .foregroundStyle(KiteTheme.buyBlue)
+                    }
+                    .font(.system(size: 13))
+                    Text("Demo build — enter any User ID and password.")
+                        .font(.system(size: 12))
                         .foregroundStyle(KiteTheme.textSecondary)
                 }
-                .font(.footnote)
             }
-            .padding(24)
+            .padding(.horizontal, 24)
         }
         .scrollDismissesKeyboard(.interactively)
         .onAppear { focused = .userID }
@@ -95,32 +110,39 @@ struct CredentialsView: View {
     }
 }
 
-/// A titled input field styled like Kite's underlined form fields.
-struct LabeledField: View {
+/// A titled underlined input field, matching Kite's form fields. The underline
+/// highlights in the brand color while the field is focused.
+struct LabeledField<F: Hashable>: View {
     let title: String
     @Binding var text: String
     var placeholder: String = ""
     var isSecure: Bool = false
     var keyboard: UIKeyboardType = .default
+    var focus: FocusState<F?>.Binding
+    var field: F
+
+    private var isFocused: Bool { focus.wrappedValue.map { $0 == field } ?? false }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
-                .font(.footnote)
+                .font(.system(size: 13))
                 .foregroundStyle(KiteTheme.textSecondary)
             Group {
                 if isSecure {
                     SecureField(placeholder, text: $text)
+                        .focused(focus, equals: field)
                 } else {
                     TextField(placeholder, text: $text)
                         .keyboardType(keyboard)
+                        .focused(focus, equals: field)
                 }
             }
-            .font(.body)
-            .padding(.vertical, 10)
+            .font(.system(size: 17))
+            .padding(.vertical, 8)
             Rectangle()
-                .fill(KiteTheme.separator)
-                .frame(height: 1)
+                .fill(isFocused ? KiteTheme.brand : KiteTheme.separator)
+                .frame(height: isFocused ? 1.5 : 1)
         }
     }
 }

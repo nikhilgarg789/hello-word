@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// A single holding row showing quantity, average cost, live LTP and live P&L —
-/// laid out like Kite's holdings list.
+/// A single holding row, laid out like Kite's holdings list: symbol + net P&L
+/// on top, quantity/average and live LTP + day change beneath.
 struct HoldingRow: View {
     @EnvironmentObject private var market: MarketDataService
     let holding: Holding
@@ -10,49 +10,39 @@ struct HoldingRow: View {
         let ltp = market.lastPrice(for: holding.symbol)
         let pnl = holding.pnl(ltp: ltp)
         let pnlPct = holding.pnlPercent(ltp: ltp)
-        let prevClose = SeedData.instrument(for: holding.symbol)?.previousClose ?? holding.averagePrice
+        let prevClose = market.previousClose(for: holding.symbol)
         let dayChangePct = prevClose == 0 ? 0 : ((ltp - prevClose) / prevClose) * 100
         let pnlColor = KiteTheme.pnlColor(pnl)
 
-        VStack(spacing: 8) {
-            HStack {
+        VStack(spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
                 Text(holding.symbol)
-                    .font(.subheadline.weight(.medium))
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(KiteTheme.textPrimary)
                 Spacer()
-                Text(Format.signed(pnl))
-                    .font(.subheadline.weight(.semibold))
+                Text("\(Format.signed(pnl))  (\(Format.signedPercent(pnlPct)))")
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(pnlColor)
                     .monospacedDigit()
             }
 
-            HStack {
+            HStack(alignment: .firstTextBaseline) {
                 Text("Qty. \(holding.quantity)  ·  Avg. \(Format.currency(holding.averagePrice))")
-                    .font(.caption)
+                    .font(.system(size: 12))
                     .foregroundStyle(KiteTheme.textSecondary)
                 Spacer()
-                Text(Format.signedPercent(pnlPct))
-                    .font(.caption)
-                    .foregroundStyle(pnlColor)
-                    .monospacedDigit()
-            }
-
-            HStack {
-                Text("Invested \(Format.currency(holding.invested))")
-                    .font(.caption2)
-                    .foregroundStyle(KiteTheme.textSecondary)
-                Spacer()
-                HStack(spacing: 4) {
+                HStack(spacing: 5) {
                     Text("LTP \(Format.currency(ltp))")
-                        .font(.caption2)
                         .foregroundStyle(KiteTheme.textSecondary)
                     Text("(\(Format.signedPercent(dayChangePct)))")
-                        .font(.caption2)
                         .foregroundStyle(KiteTheme.pnlColor(dayChangePct))
                 }
+                .font(.system(size: 12))
                 .monospacedDigit()
             }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .background(KiteTheme.card)
     }
 }

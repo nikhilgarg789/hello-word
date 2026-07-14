@@ -24,18 +24,31 @@ At the login screen, type any User ID and password, tap **Login**, enter any 6 d
 
 ## How the "live" prices work
 
-There's no brokerage API key required. `MarketDataService` (`KiteClone/Services/MarketDataService.swift`)
-generates prices with a small, mean-reverting random walk around each stock's
-previous close, publishing updates a few times per second via Combine. Every
-view observes it, so the watchlist and the portfolio P&L move on their own.
+Prices come from **Yahoo Finance's free, keyless quote endpoint** — no API key
+or account needed. `MarketDataService` (`KiteClone/Services/MarketDataService.swift`)
+polls `https://query1.finance.yahoo.com/v8/finance/chart/<SYMBOL>.NS` every few
+seconds for each stock (NSE symbols map to Yahoo by appending `.NS`, e.g.
+`RELIANCE.NS`), reads the latest price and previous close, and publishes them via
+Combine. Every view observes it, so the watchlist and portfolio P&L update on
+their own. A small **"live" / "sim"** badge on the watchlist shows whether real
+data is flowing.
 
-### Wiring in real market data
+If the network is unavailable or Yahoo can't be reached, the service
+automatically falls back to a small simulated random walk so the UI never looks
+frozen.
 
-Replace the body of `MarketDataService.tick()` (or the timer entirely) with a
-network call that updates `quotes[symbol]?.lastPrice` from a real quotes API
-(e.g. the Kite Connect API or any market-data provider). The rest of the UI —
-including all P&L math — will update automatically because it's driven off the
-published `quotes` dictionary.
+Notes:
+- Yahoo quotes are typically delayed ~15 minutes and are unofficial (the
+  endpoint can rate-limit or change). Fine for a demo; not for real trading.
+- Outside NSE market hours (09:15–15:30 IST) prices are the last close, so they
+  won't move much — that's expected.
+
+### Wiring in a different data source
+
+Replace `MarketDataService.fetchQuote(symbol:)` with a call to your provider of
+choice (Kite Connect, a paid market-data API, etc.) that returns last price and
+previous close. The rest of the UI — including all P&L math — updates
+automatically because it's driven off the published `quotes` dictionary.
 
 ## Project structure
 

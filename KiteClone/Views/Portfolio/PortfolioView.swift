@@ -1,17 +1,13 @@
 import SwiftUI
 
-/// The Portfolio tab: a fixed set of holdings whose current value, day's change
-/// and total P&L are all computed live from `MarketDataService` prices.
+/// The Portfolio (Holdings) tab: a fixed set of holdings whose current value,
+/// day's change and total P&L are computed live from `MarketDataService`.
 struct PortfolioView: View {
     @EnvironmentObject private var market: MarketDataService
 
     private let holdings = SeedData.holdings
 
-    // MARK: Aggregates (recomputed on every price tick)
-
-    private var invested: Double {
-        holdings.reduce(0) { $0 + $1.invested }
-    }
+    private var invested: Double { holdings.reduce(0) { $0 + $1.invested } }
 
     private var currentValue: Double {
         holdings.reduce(0) { $0 + $1.currentValue(ltp: market.lastPrice(for: $1.symbol)) }
@@ -25,8 +21,8 @@ struct PortfolioView: View {
 
     private var dayPnl: Double {
         holdings.reduce(0) { sum, h in
-            let prevClose = SeedData.instrument(for: h.symbol)?.previousClose ?? h.averagePrice
-            return sum + h.dayPnl(ltp: market.lastPrice(for: h.symbol), previousClose: prevClose)
+            sum + h.dayPnl(ltp: market.lastPrice(for: h.symbol),
+                           previousClose: market.previousClose(for: h.symbol))
         }
     }
 
@@ -38,25 +34,25 @@ struct PortfolioView: View {
                         .padding(16)
 
                     HStack {
-                        Text("Holdings (\(holdings.count))")
-                            .font(.footnote.weight(.medium))
+                        Text("HOLDINGS (\(holdings.count))")
+                            .font(.system(size: 12, weight: .semibold))
                             .foregroundStyle(KiteTheme.textSecondary)
                         Spacer()
                     }
                     .padding(.horizontal, 16)
-                    .padding(.bottom, 8)
+                    .padding(.bottom, 4)
 
                     LazyVStack(spacing: 0) {
                         ForEach(holdings) { holding in
                             HoldingRow(holding: holding)
-                            Divider().background(KiteTheme.separator)
+                            Divider().padding(.leading, 16)
                         }
                     }
                     .background(KiteTheme.card)
                 }
             }
             .background(KiteTheme.background)
-            .navigationTitle("Portfolio")
+            .navigationTitle("Holdings")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -64,52 +60,52 @@ struct PortfolioView: View {
     // MARK: Summary card
 
     private var summaryCard: some View {
-        VStack(spacing: 16) {
-            HStack {
-                metric(title: "Invested", value: Format.currency(invested), color: KiteTheme.textPrimary)
+        VStack(spacing: 14) {
+            HStack(alignment: .top) {
+                metric(title: "Invested", value: invested, alignment: .leading)
                 Spacer()
-                metric(title: "Current", value: Format.currency(currentValue), color: KiteTheme.textPrimary, alignment: .trailing)
+                metric(title: "Current", value: currentValue, alignment: .trailing)
             }
 
-            Divider().background(KiteTheme.separator)
+            Divider()
 
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Day's P&L")
-                        .font(.caption)
-                        .foregroundStyle(KiteTheme.textSecondary)
-                    Text(Format.signed(dayPnl))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(KiteTheme.pnlColor(dayPnl))
-                        .monospacedDigit()
-                }
+                Text("P&L")
+                    .font(.system(size: 13))
+                    .foregroundStyle(KiteTheme.textSecondary)
                 Spacer()
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("Total P&L")
-                        .font(.caption)
-                        .foregroundStyle(KiteTheme.textSecondary)
-                    Text("\(Format.signed(totalPnl))  (\(Format.signedPercent(totalPnlPercent)))")
-                        .font(.subheadline.weight(.bold))
-                        .foregroundStyle(KiteTheme.pnlColor(totalPnl))
-                        .monospacedDigit()
-                }
+                Text("\(Format.signed(totalPnl))   \(Format.signedPercent(totalPnlPercent))")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(KiteTheme.pnlColor(totalPnl))
+                    .monospacedDigit()
+            }
+
+            Divider()
+
+            HStack {
+                Text("Day's P&L")
+                    .font(.system(size: 13))
+                    .foregroundStyle(KiteTheme.textSecondary)
+                Spacer()
+                Text(Format.signed(dayPnl))
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(KiteTheme.pnlColor(dayPnl))
+                    .monospacedDigit()
             }
         }
         .padding(16)
-        .background(KiteTheme.card, in: RoundedRectangle(cornerRadius: 10))
-        .overlay(
-            RoundedRectangle(cornerRadius: 10).stroke(KiteTheme.separator, lineWidth: 1)
-        )
+        .background(KiteTheme.card, in: RoundedRectangle(cornerRadius: 8))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(KiteTheme.separator, lineWidth: 1))
     }
 
-    private func metric(title: String, value: String, color: Color, alignment: HorizontalAlignment = .leading) -> some View {
+    private func metric(title: String, value: Double, alignment: HorizontalAlignment) -> some View {
         VStack(alignment: alignment, spacing: 4) {
             Text(title)
-                .font(.caption)
+                .font(.system(size: 13))
                 .foregroundStyle(KiteTheme.textSecondary)
-            Text(value)
-                .font(.headline)
-                .foregroundStyle(color)
+            Text("₹\(Format.currency(value))")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(KiteTheme.textPrimary)
                 .monospacedDigit()
         }
     }
